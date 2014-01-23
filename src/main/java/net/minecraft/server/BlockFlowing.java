@@ -4,6 +4,7 @@ import java.util.Random;
 
 // CraftBukkit start
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 // CraftBukkit end
 
@@ -104,9 +105,20 @@ public class BlockFlowing extends BlockFluids {
 
             if (!event.isCancelled()) {
                 if (this.material == Material.LAVA && world.getType(i, j - 1, k).getMaterial() == Material.WATER) {
-                    world.setTypeUpdate(i, j - 1, k, Blocks.STONE);
-                    this.fizz(world, i, j - 1, k);
-                    return;
+                    org.bukkit.block.BlockState blockState = world.getWorld().getBlockAt(i, j - 1, k).getState();
+                    blockState.setType(org.bukkit.Material.STONE);
+
+                    BlockFormEvent stoneForm = new BlockFormEvent(blockState.getBlock(), blockState);
+
+                    if (server != null) {
+                        server.getPluginManager().callEvent(stoneForm);
+                    }
+
+                    if (!stoneForm.isCancelled()) {
+                        blockState.update(true);
+                        this.fizz(world, i, j - 1, k);
+                        return;
+                    }
                 }
 
                 if (l >= 8) {

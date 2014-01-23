@@ -2,6 +2,8 @@ package net.minecraft.server;
 
 import java.util.Random;
 
+import org.bukkit.event.block.BlockFormEvent; // CraftBukkit
+
 public abstract class BlockFluids extends Block {
     protected BlockFluids(Material material) {
         super(material);
@@ -208,11 +210,28 @@ public abstract class BlockFluids extends Block {
                 if (flag) {
                     int l = world.getData(i, j, k);
 
+                    // CraftBukkit start - call BlockFormEvent
+                    org.bukkit.block.BlockState blockState = world.getWorld().getBlockAt(i, j, k).getState();
+
                     if (l == 0) {
-                        world.setTypeUpdate(i, j, k, Blocks.OBSIDIAN);
+                        blockState.setType(org.bukkit.Material.OBSIDIAN);
                     } else if (l <= 4) {
-                        world.setTypeUpdate(i, j, k, Blocks.COBBLESTONE);
+                        blockState.setType(org.bukkit.Material.COBBLESTONE);
                     }
+
+                    BlockFormEvent event = new BlockFormEvent(blockState.getBlock(), blockState);
+                    org.bukkit.Server server = world.getServer();
+
+                    if (server != null) {
+                        server.getPluginManager().callEvent(event);
+                    }
+
+                    if (event.isCancelled()) {
+                        return;
+                    }
+
+                    blockState.update(true);
+                    // CraftBukkit end
 
                     this.fizz(world, i, j, k);
                 }
