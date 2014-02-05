@@ -5,6 +5,7 @@ import java.util.UUID;
 
 //CraftBukkit start
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 //CraftBukkit end
@@ -180,7 +181,7 @@ public class EntityZombie extends EntityMonster {
                     if (World.a((IBlockAccess) this.world, i1, j1 - 1, k1) && this.world.getLightLevel(i1, j1, k1) < 10) {
                         entityzombie.setPosition((double) i1, (double) j1, (double) k1);
                         if (this.world.b(entityzombie.boundingBox) && this.world.getCubes(entityzombie, entityzombie.boundingBox).isEmpty() && !this.world.containsLiquid(entityzombie.boundingBox)) {
-                            this.world.addEntity(entityzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.REINFORCEMENTS); // CraftBukkit
+                            this.world.addEntity(entityzombie, CreatureSpawnEvent.SpawnReason.REINFORCEMENTS); // CraftBukkit
                             entityzombie.setGoalTarget(entityliving);
                             entityzombie.a((GroupDataEntity) null);
                             this.getAttributeInstance(bp).a(new AttributeModifier("Zombie reinforcement caller charge", -0.05000000074505806D, 0));
@@ -335,7 +336,7 @@ public class EntityZombie extends EntityMonster {
                 entityzombie.setBaby(true);
             }
 
-            this.world.addEntity(entityzombie);
+            this.world.addEntity(entityzombie, CreatureSpawnEvent.SpawnReason.INFECTION); // CraftBukkit - add SpawnReason
             this.world.a((EntityHuman) null, 1016, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
         }
     }
@@ -438,7 +439,7 @@ public class EntityZombie extends EntityMonster {
         }
 
         this.world.kill(this);
-        this.world.addEntity(entityvillager);
+        this.world.addEntity(entityvillager, CreatureSpawnEvent.SpawnReason.CURED); // CraftBukkit - add SpawnReason
         entityvillager.addEffect(new MobEffect(MobEffectList.CONFUSION.id, 200, 0));
         this.world.a((EntityHuman) null, 1017, (int) this.locX, (int) this.locY, (int) this.locZ, 0);
     }
