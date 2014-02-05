@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.bukkit.event.entity.EntityTargetEvent;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +34,13 @@ public class PathfinderGoalHurtByTarget extends PathfinderGoalTarget {
                 EntityCreature entitycreature = (EntityCreature) iterator.next();
 
                 if (this.c != entitycreature && entitycreature.getGoalTarget() == null && !entitycreature.c(this.c.getLastDamager())) {
-                    entitycreature.setGoalTarget(this.c.getLastDamager());
+                    // CraftBukkit start - call EntityTargetEvent
+                    org.bukkit.event.entity.EntityTargetLivingEntityEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callEntityTargetLivingEvent(entitycreature, this.c.getLastDamager(), EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY);
+                    if (event.isCancelled()) {
+                        continue;
+                    }
+                    entitycreature.setGoalTarget(event.getTarget() == null ? null : ((org.bukkit.craftbukkit.entity.CraftLivingEntity) event.getTarget()).getHandle());
+                    // CraftBukkit end
                 }
             }
         }
