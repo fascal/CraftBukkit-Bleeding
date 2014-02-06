@@ -1,5 +1,7 @@
 package net.minecraft.server;
 
+import org.bukkit.event.world.PortalCreateEvent; // CraftBukkit
+
 public class ItemEnderEye extends Item {
 
     public ItemEnderEye() {
@@ -60,6 +62,10 @@ public class ItemEnderEye extends Item {
                 }
 
                 if (flag1 && l1 == k1 + 2) {
+                    // CraftBukkit start
+                    java.util.Collection<org.bukkit.block.Block> blocks = new java.util.HashSet<org.bukkit.block.Block>();
+                    org.bukkit.World bworld = world.getWorld();
+                    // CraftBukkit end
                     for (j2 = k1; j2 <= l1; ++j2) {
                         k2 = i + Direction.a[i2] * j2;
                         l2 = k + Direction.b[i2] * j2;
@@ -69,6 +75,7 @@ public class ItemEnderEye extends Item {
                             flag1 = false;
                             break;
                         }
+                        blocks.add(bworld.getBlockAt(k2, j, l2)); // CraftBukkit - add block to list
                     }
 
                     int i3;
@@ -83,10 +90,17 @@ public class ItemEnderEye extends Item {
                                 flag1 = false;
                                 break;
                             }
+                            blocks.add(bworld.getBlockAt(l2, j, i3)); // CraftBukkit - add block to list
                         }
                     }
 
                     if (flag1) {
+                        // CraftBukkit start
+                        PortalCreateEvent event = new PortalCreateEvent(blocks, bworld, PortalCreateEvent.CreateReason.FIRE);
+                        if (event.isCancelled()) {
+                            return true;
+                        }
+                        // CraftBukkit end
                         for (j2 = k1; j2 <= l1; ++j2) {
                             for (k2 = 1; k2 <= 3; ++k2) {
                                 l2 = i + Direction.a[i2] * j2;
