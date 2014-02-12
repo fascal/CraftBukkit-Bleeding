@@ -48,7 +48,7 @@ public class EntityPlayer extends EntityHuman implements ICrafting {
     private int bV;
     private EnumChatVisibility bW;
     private boolean bX = true;
-    private long bY = 0L;
+    public long bY = 0L; // CraftBukkit - private -> public
     private int containerCounter;
     public boolean h;
     public int ping;
