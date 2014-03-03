@@ -12,7 +12,6 @@ import java.util.Map;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.event.Event.Result;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.InventoryView;
 // CraftBukkit end
 
@@ -179,13 +178,12 @@ public abstract class Container {
                     ItemStack oldCursor = playerinventory.getCarried();
                     playerinventory.setCarried(CraftItemStack.asNMSCopy(newcursor));
 
-                    InventoryDragEvent event = new InventoryDragEvent(view, (newcursor.getType() != org.bukkit.Material.AIR ? newcursor : null), CraftItemStack.asBukkitCopy(oldCursor), this.f == 1, eventmap); // Should be dragButton
-                    entityhuman.world.getServer().getPluginManager().callEvent(event);
-
+                    org.bukkit.event.inventory.InventoryDragEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callInventoryDragEvent(view, (newcursor.getType() != org.bukkit.Material.AIR ? newcursor : null), CraftItemStack.asBukkitCopy(oldCursor), this.f == 1, eventmap); // Should be dragButton
+                    Result result = event.getResult();
                     // Whether or not a change was made to the inventory that requires an update.
-                    boolean needsUpdate = event.getResult() != Result.DEFAULT;
+                    boolean needsUpdate = result != Result.DEFAULT;
 
-                    if (event.getResult() != Result.DENY) {
+                    if (result != Result.DENY) {
                         for (Map.Entry<Integer, ItemStack> dslot : draggedSlots.entrySet()) {
                             view.setItem(dslot.getKey(), CraftItemStack.asBukkitCopy(dslot.getValue()));
                         }

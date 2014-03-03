@@ -107,7 +107,7 @@ public class EntityEnderman extends EntityMonster {
         this.bu = this.target;
         int i;
 
-        if (!this.world.isStatic && this.world.getGameRules().getBoolean("mobGriefing")) {
+        if (!this.world.isStatic /*&& this.world.getGameRules().getBoolean("mobGriefing")*/) { // CraftBukkit - call events even if mobGriefing is false
             int j;
             int k;
             Block block;
@@ -120,7 +120,7 @@ public class EntityEnderman extends EntityMonster {
                     block = this.world.getType(i, j, k);
                     if (br[Block.b(block)]) {
                         // CraftBukkit start - Pickup event
-                        if (!CraftEventFactory.callEntityChangeBlockEvent(this, this.world.getWorld().getBlockAt(i, j, k), org.bukkit.Material.AIR).isCancelled()) {
+                        if (!CraftEventFactory.callEntityChangeBlockEvent(this, i, j, k, Blocks.AIR, 0, !this.world.getGameRules().getBoolean("mobGriefing")).isCancelled()) {
                             this.setCarried(block);
                             this.setCarriedData(this.world.getData(i, j, k));
                             this.world.setTypeUpdate(i, j, k, Blocks.AIR);
@@ -137,7 +137,7 @@ public class EntityEnderman extends EntityMonster {
 
                 if (block.getMaterial() == Material.AIR && block1.getMaterial() != Material.AIR && block1.d()) {
                     // CraftBukkit start - Place event
-                    if (!CraftEventFactory.callEntityChangeBlockEvent(this, i, j, k, this.getCarried(), this.getCarriedData()).isCancelled()) {
+                    if (!CraftEventFactory.callEntityChangeBlockEvent(this, i, j, k, this.getCarried(), this.getCarriedData(), this.world.getGameRules().getBoolean("mobGriefing")).isCancelled()) {
                         this.world.setTypeAndData(i, j, k, this.getCarried(), this.getCarriedData(), 3);
                         this.setCarried(Blocks.AIR);
                     }

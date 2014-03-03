@@ -1,9 +1,6 @@
 package net.minecraft.server;
 
-// CraftBukkit start
-import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.event.entity.EntityTargetEvent;
-// CraftBukkti end
+import org.bukkit.craftbukkit.util.CraftMagicNumbers; // CraftBukkit
 
 public class EntitySpider extends EntityMonster {
 
@@ -62,19 +59,7 @@ public class EntitySpider extends EntityMonster {
         float f1 = this.d(1.0F);
 
         if (f1 > 0.5F && this.random.nextInt(100) == 0) {
-            // CraftBukkit start
-            EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), null, EntityTargetEvent.TargetReason.FORGOT_TARGET);
-            this.world.getServer().getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
-                if (event.getTarget() == null) {
-                    this.target = null;
-                } else {
-                    this.target = ((org.bukkit.craftbukkit.entity.CraftEntity) event.getTarget()).getHandle();
-                }
-                return;
-            }
-            // CraftBukkit end
+            this.target = org.bukkit.craftbukkit.event.CraftEventFactory.handleEntityTargetEvent(this, this.target, null, org.bukkit.event.entity.EntityTargetEvent.TargetReason.FORGOT_TARGET); // CraftBukkit
         } else {
             if (f > 2.0F && f < 6.0F && this.random.nextInt(10) == 0) {
                 if (this.onGround) {

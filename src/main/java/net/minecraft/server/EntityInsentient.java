@@ -6,7 +6,6 @@ import java.util.UUID;
 
 // CraftBukkit start
 import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.EntityUnleashEvent.UnleashReason;
 // CraftBukkit end
 
@@ -832,13 +831,21 @@ public abstract class EntityInsentient extends EntityLiving {
 
         if (this.bv) {
             if (this.bw == null || this.bw.dead) {
-                this.world.getServer().getPluginManager().callEvent(new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.HOLDER_GONE)); // CraftBukkit
-                this.unleash(true, true);
+                this.unleash(true, true, UnleashReason.HOLDER_GONE); // CraftBukkit - add unleash reason
             }
         }
     }
 
     public void unleash(boolean flag, boolean flag1) {
+        // CraftBukkit start
+        this.unleash(flag, flag1, null);
+    }
+
+    public void unleash(boolean flag, boolean flag1, UnleashReason unleashReason) { // add unleashReason
+        if (unleashReason != null) {
+            CraftEventFactory.callEntityUnleashEvent(this, unleashReason);
+        }
+        // CraftBukkit end
         if (this.bv) {
             this.bv = false;
             this.bw = null;
@@ -899,8 +906,7 @@ public abstract class EntityInsentient extends EntityLiving {
 
                 this.bw = entityleash;
             } else {
-                this.world.getServer().getPluginManager().callEvent(new EntityUnleashEvent(this.getBukkitEntity(), UnleashReason.UNKNOWN)); // CraftBukkit
-                this.unleash(false, true);
+                this.unleash(false, true, UnleashReason.UNKNOWN); // CraftBukkit - add unleash reason
             }
         }
 

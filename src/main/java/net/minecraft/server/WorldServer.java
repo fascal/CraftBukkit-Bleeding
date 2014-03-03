@@ -15,15 +15,14 @@ import org.apache.logging.log4j.Logger;
 // CraftBukkit start
 import org.bukkit.WeatherType;
 import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.LongHash;
 
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
-import org.bukkit.event.weather.ThunderChangeEvent;
-import org.bukkit.event.weather.WeatherChangeEvent;
+// CraftBukkit end
 
-public class WorldServer extends World implements org.bukkit.BlockChangeDelegate {
-    // CraftBukkit end
+public class WorldServer extends World implements org.bukkit.BlockChangeDelegate { // CraftBukkit - implement BlockChangeDelegate
 
     private static final Logger a = LogManager.getLogger();
     private final MinecraftServer server;
@@ -255,16 +254,11 @@ public class WorldServer extends World implements org.bukkit.BlockChangeDelegate
 
     private void Y() {
         // CraftBukkit start
-        WeatherChangeEvent weather = new WeatherChangeEvent(this.getWorld(), false);
-        this.getServer().getPluginManager().callEvent(weather);
-
-        ThunderChangeEvent thunder = new ThunderChangeEvent(this.getWorld(), false);
-        this.getServer().getPluginManager().callEvent(thunder);
-        if (!weather.isCancelled()) {
+        if (!CraftEventFactory.callWeatherChangeEvent(this.getWorld(), false).isCancelled()) {
             this.worldData.setWeatherDuration(0);
             this.worldData.setStorm(false);
         }
-        if (!thunder.isCancelled()) {
+        if (!CraftEventFactory.callThunderChangeEvent(this.getWorld(), false).isCancelled()) {
             this.worldData.setThunderDuration(0);
             this.worldData.setThundering(false);
         }

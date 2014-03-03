@@ -18,7 +18,6 @@ import org.bukkit.craftbukkit.chunkio.ChunkIOExecutor;
 import org.bukkit.craftbukkit.util.LongHash;
 import org.bukkit.craftbukkit.util.LongHashSet;
 import org.bukkit.craftbukkit.util.LongObjectHashMap;
-import org.bukkit.event.world.ChunkUnloadEvent;
 // CraftBukkit end
 
 public class ChunkProviderServer implements IChunkProvider {
@@ -304,11 +303,11 @@ public class ChunkProviderServer implements IChunkProvider {
             for (int i = 0; i < 100 && !this.unloadQueue.isEmpty(); i++) {
                 long chunkcoordinates = this.unloadQueue.popFirst();
                 Chunk chunk = this.chunks.get(chunkcoordinates);
-                if (chunk == null) continue;
+                if (chunk == null) {
+                    continue;
+                }
 
-                ChunkUnloadEvent event = new ChunkUnloadEvent(chunk.bukkitChunk);
-                server.getPluginManager().callEvent(event);
-                if (!event.isCancelled()) {
+                if (!org.bukkit.craftbukkit.event.CraftEventFactory.callEvent(new org.bukkit.event.world.ChunkUnloadEvent(chunk.bukkitChunk)).isCancelled()) {
                     chunk.removeEntities();
                     this.saveChunk(chunk);
                     this.saveChunkNOP(chunk);

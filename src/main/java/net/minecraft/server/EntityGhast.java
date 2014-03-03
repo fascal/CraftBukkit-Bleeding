@@ -1,9 +1,9 @@
 package net.minecraft.server;
 
 // CraftBukkit start
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 // CraftBukkit end
 
 public class EntityGhast extends EntityFlying implements IMonster {
@@ -80,37 +80,11 @@ public class EntityGhast extends EntityFlying implements IMonster {
         }
 
         if (this.target != null && this.target.dead) {
-            // CraftBukkit start
-            EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), null, EntityTargetEvent.TargetReason.TARGET_DIED);
-            this.world.getServer().getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
-                if (event.getTarget() == null) {
-                    this.target = null;
-                } else {
-                    this.target = ((CraftEntity) event.getTarget()).getHandle();
-                }
-            }
-            // CraftBukkit end
+            this.target = CraftEventFactory.handleEntityTargetEvent(this, this.target, null, TargetReason.TARGET_DIED); // CraftBukkit
         }
 
         if (this.target == null || this.br-- <= 0) {
-            // CraftBukkit start
-            Entity target = this.world.findNearbyVulnerablePlayer(this, 100.0D);
-            if (target != null) {
-                EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), target.getBukkitEntity(), EntityTargetEvent.TargetReason.CLOSEST_PLAYER);
-                this.world.getServer().getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
-                    if (event.getTarget() == null) {
-                        this.target = null;
-                    } else {
-                        this.target = ((CraftEntity) event.getTarget()).getHandle();
-                    }
-                }
-            }
-            // CraftBukkit end
-
+            this.target = CraftEventFactory.handleEntityTargetEvent(this, this.target, this.world.findNearbyVulnerablePlayer(this, 100.0D), TargetReason.CLOSEST_PLAYER); // CraftBukkit
             if (this.target != null) {
                 this.br = 20;
             }

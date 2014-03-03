@@ -5,12 +5,13 @@ import java.util.List;
 
 // CraftBukkit start
 import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.util.BlockStateListPopulator;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.Bukkit;
 // CraftBukkit end
 
@@ -378,19 +379,7 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
     private void bO() {
         this.bz = false;
         if (this.random.nextInt(2) == 0 && !this.world.players.isEmpty()) {
-            // CraftBukkit start
-            Entity target = (Entity) this.world.players.get(this.random.nextInt(this.world.players.size()));
-            EntityTargetEvent event = new EntityTargetEvent(this.getBukkitEntity(), target.getBukkitEntity(), EntityTargetEvent.TargetReason.RANDOM_TARGET);
-            this.world.getServer().getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
-                if (event.getTarget() == null) {
-                    this.bD = null;
-                } else {
-                    this.bD = ((org.bukkit.craftbukkit.entity.CraftEntity) event.getTarget()).getHandle();
-                }
-            }
-            // CraftBukkit end
+            this.bD = CraftEventFactory.handleEntityTargetEvent(this, this.bD, (Entity) this.world.players.get(this.random.nextInt(this.world.players.size())), TargetReason.RANDOM_TARGET); // CraftBukkit
         } else {
             boolean flag = false;
 
@@ -407,7 +396,7 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
                 flag = d0 * d0 + d1 * d1 + d2 * d2 > 100.0D;
             } while (!flag);
 
-            this.bD = null;
+            this.bD = CraftEventFactory.handleEntityTargetEvent(this, this.bD, null, TargetReason.FORGOT_TARGET); // CraftBukkit
         }
     }
 
@@ -508,7 +497,7 @@ public class EntityEnderDragon extends EntityInsentient implements IComplex, IMo
         this.h = this.locX + (double) (f2 * 5.0F) + (double) ((this.random.nextFloat() - 0.5F) * 2.0F);
         this.i = this.locY + (double) (this.random.nextFloat() * 3.0F) + 1.0D;
         this.j = this.locZ - (double) (f3 * 5.0F) + (double) ((this.random.nextFloat() - 0.5F) * 2.0F);
-        this.bD = null;
+        this.bD = CraftEventFactory.handleEntityTargetEvent(this, this.bD, null, TargetReason.FORGOT_TARGET); // CraftBukkit;
         if (damagesource.getEntity() instanceof EntityHuman || damagesource.c()) {
             this.dealDamage(damagesource, f);
         }

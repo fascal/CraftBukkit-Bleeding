@@ -185,17 +185,8 @@ public class EntityCreeper extends EntityMonster {
         if (CraftEventFactory.callCreeperPowerEvent(this, entitylightning, org.bukkit.event.entity.CreeperPowerEvent.PowerCause.LIGHTNING).isCancelled()) {
             return;
         }
-
-        this.setPowered(true);
-    }
-
-    public void setPowered(boolean powered) {
-        if (!powered) {
-            this.datawatcher.watch(17, Byte.valueOf((byte) 0));
-        } else {
-            this.datawatcher.watch(17, Byte.valueOf((byte) 1));
-        }
         // CraftBukkit end
+        this.datawatcher.watch(17, Byte.valueOf((byte) 1));
     }
 
     protected boolean a(EntityHuman entityhuman) {

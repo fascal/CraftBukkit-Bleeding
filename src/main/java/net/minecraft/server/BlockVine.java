@@ -198,11 +198,7 @@ public class BlockVine extends Block {
                     }
 
                     if (i2 > 0) {
-                        // CraftBukkit start - Call BlockSpreadEvent
-                        org.bukkit.block.Block source = world.getWorld().getBlockAt(i, j, k);
-                        org.bukkit.block.Block block = world.getWorld().getBlockAt(i, j + 1, k);
-                        CraftEventFactory.handleBlockSpreadEvent(block, source, this, l1);
-                        // CraftBukkit end
+                        CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i, j + 1, k), world.getWorld().getBlockAt(i, j, k), this, l1); // CraftBukkit
                     }
                 }
             } else {
@@ -221,19 +217,16 @@ public class BlockVine extends Block {
 
                         // CraftBukkit start - Call BlockSpreadEvent
                         org.bukkit.block.Block source = world.getWorld().getBlockAt(i, j, k);
-                        org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(i + Direction.a[k1], j, k + Direction.b[k1]);
                         if ((i1 & 1 << l1) != 0 && this.a(world.getType(i + Direction.a[k1] + Direction.a[l1], j, k + Direction.b[k1] + Direction.b[l1]))) {
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, 1 << l1);
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i + Direction.a[k1], j, k + Direction.b[k1]), source, this, 1 << l1);
                         } else if ((i1 & 1 << j2) != 0 && this.a(world.getType(i + Direction.a[k1] + Direction.a[j2], j, k + Direction.b[k1] + Direction.b[j2]))) {
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, 1 << j2);
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i + Direction.a[k1], j, k + Direction.b[k1]), source, this, 1 << j2);
                         } else if ((i1 & 1 << l1) != 0 && world.isEmpty(i + Direction.a[k1] + Direction.a[l1], j, k + Direction.b[k1] + Direction.b[l1]) && this.a(world.getType(i + Direction.a[l1], j, k + Direction.b[l1]))) {
-                            bukkitBlock = world.getWorld().getBlockAt(i + Direction.a[k1] + Direction.a[l1], j, k + Direction.b[k1] + Direction.b[l1]);
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, 1 << (k1 + 2 & 3));
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i + Direction.a[k1] + Direction.a[l1], j, k + Direction.b[k1] + Direction.b[l1]), source, this, 1 << (k1 + 2 & 3));
                         } else if ((i1 & 1 << j2) != 0 && world.isEmpty(i + Direction.a[k1] + Direction.a[j2], j, k + Direction.b[k1] + Direction.b[j2]) && this.a(world.getType(i + Direction.a[j2], j, k + Direction.b[j2]))) {
-                            bukkitBlock = world.getWorld().getBlockAt(i + Direction.a[k1] + Direction.a[j2], j, k + Direction.b[k1] + Direction.b[j2]);
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, 1 << (k1 + 2 & 3));
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i + Direction.a[k1] + Direction.a[j2], j, k + Direction.b[k1] + Direction.b[j2]), source, this, 1 << (k1 + 2 & 3));
                         } else if (this.a(world.getType(i + Direction.a[k1], j + 1, k + Direction.b[k1]))) {
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, 0);
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i + Direction.a[k1], j, k + Direction.b[k1]), source, this, 0);
                         }
                         // CraftBukkit end
                     } else if (block.material.k() && block.d()) {
@@ -244,11 +237,7 @@ public class BlockVine extends Block {
                     if (block.material == Material.AIR) {
                         l1 = world.random.nextInt(16) & i1;
                         if (l1 > 0) {
-                            // CraftBukkit start - Call BlockSpreadEvent
-                            org.bukkit.block.Block source = world.getWorld().getBlockAt(i, j, k);
-                            org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(i, j - 1, k);
-                            CraftEventFactory.handleBlockSpreadEvent(bukkitBlock, source, this, l1);
-                            // CraftBukkit end
+                            CraftEventFactory.handleBlockSpreadEvent(world.getWorld().getBlockAt(i, j - 1, k), world.getWorld().getBlockAt(i, j, k), this, l1); // CraftBukkit
                         }
                     } else if (block == this) {
                         l1 = world.random.nextInt(16) & i1;

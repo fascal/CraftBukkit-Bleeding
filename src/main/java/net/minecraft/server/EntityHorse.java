@@ -1174,19 +1174,23 @@ public class EntityHorse extends EntityAnimal implements IInventoryListener {
 
     public void w(int i) {
         if (this.cs()) {
-            // CraftBukkit start - fire HorseJumpEvent, use event power
             if (i < 0) {
                 i = 0;
-            }
-
-            float power;
-            if (i >= 90) {
-                power = 1.0F;
+            /* CraftBukkit start - moved down
             } else {
-                power = 0.4F + 0.4F * (float) i / 90.0F;
+                this.bI = true;
+                this.cS();
+                // CraftBukkit end */
             }
 
-            org.bukkit.event.entity.HorseJumpEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callHorseJumpEvent(this, power);
+            if (i >= 90) {
+                this.bt = 1.0F;
+            } else {
+                this.bt = 0.4F + 0.4F * (float) i / 90.0F;
+            }
+
+            // CraftBukkit start
+            org.bukkit.event.entity.HorseJumpEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callHorseJumpEvent(this, this.bt);
             if (!event.isCancelled()) {
                 this.bI = true;
                 this.cS();

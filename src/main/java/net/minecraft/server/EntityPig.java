@@ -136,8 +136,7 @@ public class EntityPig extends EntityAnimal {
 
             entitypigzombie.setEquipment(0, new ItemStack(Items.GOLD_SWORD));
             entitypigzombie.setPositionRotation(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
-            // CraftBukkit - added a reason for spawning this creature
-            this.world.addEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING);
+            this.world.addEntity(entitypigzombie, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.LIGHTNING); // CraftBukkit - added a reason for spawning this creature
             this.die();
         }
     }
